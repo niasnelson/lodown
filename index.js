@@ -173,6 +173,7 @@ module.exports.each = each;
    * 
    * 
   */
+
 function filter(array, func){
     var results = [];
     for(var i = 0; i < array.length; i++){
@@ -183,6 +184,150 @@ function filter(array, func){
     return results;
   }
 
-  module.exports.filer = filter;
+  module.exports.filter = filter;
 
+
+/**
+ * reject:
+ * @param{array}
+ * @param{function}
+ * @return{}
+ */
+
+function reject(array, func){
+    var results = [];
+    for(var i = 0; i < array.length; i++){
+      if(func(array[i], i, array) === false){
+        results.push(array[i]);
+      }
+    }
+    return results;
+  }
+
+  module.exports.reject = reject;
+
+  /**
+   * partition:
+   * @param{array}
+   * @param{function}
+   * @return{}
+   */
+   
+  function partition(array, func){
+    var result1 = [];
+    var result2 = [];
+    for(var i = 0; i < array.length; i++){
+      if(func(array[i], i, array) == true){
+        result1.push(array[i]);
+      }else if(func(array[i], i, array) == false){
+        result2.push(array[i]);
+      } 
+    }
+    return [result1, result2];
+  }
+
+  module.exports.partition = partition;
+
+  /**
+   * map
+   * @params{}
+   * @params{}
+   * @return{}
+   */
+
+   function map(collection, func){
+    //create output array
+    var mapped = [];
+    //determine if the input collection is an array
+    if(Array.isArray(collection)){
+      //iterate throught the array using a for loop
+      for(var i = 0; i < collection.length; i++){
+        //invoke the callback function on the current element of the array, the current index, and the array
+        var result = func(collection[i], i, collection);
+        mapped.push(result);//also could use mapped.push(func(collection[i], i, collection));
+      }
+    }else {
+      //else the input collection is an object
+      //iterate through the object using a for in loop
+      for(var key in collection){
+          //invoke the callback function, passing in the current value of the object, the current key, and the collection itself
+        let result = func(collection[key], key, collection);
+        mapped.push(result);
+      }
+    } 
+    return mapped;
+  }
+
+  module.exports.map = map;
+
+  /**
+   * pluck
+   * @params{array}
+   * @params{}
+   * @return{}
+   * 
+   */
+
+function pluck(array, property){
+    return array.map(function(object){
+      return object[property];
+    });
+  }
+
+module.exports.pluck = pluck;
+
+/**
+ * every:
+ * @params{collection}:
+ * @params{function}:
+ * @returns{}:
+ */
+
+function every(collection, func){
+    /*
+  let collection = [1, 2, 3, 4];
+  let func; // undefined
+  */
+  //determine if func is undefined
+  if(func === undefined){
+    //determine if the input collection is an array
+      if(Array.isArray(collection)){
+        //iterate through collection
+        for(var i = 0; i < collection.length; i++){
+          if(!collection[i]){//If the current value is     FALSEY
+            return false;
+          }
+        }
+      }else {//else it's not an array
+        //iterating through collection as an object
+        for(let key in collection){
+          if(!collection[key]){
+            return false;
+          }
+        }      
+      }
+  }else{//else it is defined (meaning it's been passed in as an argument)
+    //determine if collection is an array
+    if(Array.isArray(collection)){
+      //if array, iterate through collection using for loop
+      for (let i = 0; i < collection.length; i++){
+        //determine if the result of invoking func on the current value, index, and collection resolves to false
+        if(func(collection[i], i, collection) === false){// pass the current value, current index, and collection into func as args
+          return false;
+        }
+      }
+    }  
+  }
+  return true;
+  }
+
+  module.exports.every = every;
+
+/**
+ * some:
+ * @param{}
+ * @param{}
+ * @return{}
+ * 
+ */
 
