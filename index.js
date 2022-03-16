@@ -405,11 +405,13 @@ module.exports.reduce = reduce
  * @return{object}:properties from the other input objects are copied to object 1 and returned
  */
 
-function extend(object1, inputs){
+function extend(object1, ...inputs){
   //copy properties from object2 to object1
-    Object.assign(object1, inputs);
   //copy properties from other objects to object1 in the order they are passed in
+    Object.assign(object1, ...inputs);
   
-  //return updated object1
+    //return updated object1
   return object1;
   }
+
+  module.exports.extend = extend
