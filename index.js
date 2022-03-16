@@ -166,10 +166,10 @@ module.exports.each = each;
   module.exports.unique = unique;
 
   /**
-   * filter: 
-   * @param{array}
-   * @param{function}
-   * @return{}
+   * filter: loops over an array and calls function for each element in the array and passes in three arguments
+   * @param{array}: the input array to iterate over
+   * @param{function}: the function that is called to add arguments to the return array
+   * @return{array}: a new array of elements is returned when the function is returned true
    * 
    * 
   */
@@ -188,10 +188,10 @@ function filter(array, func){
 
 
 /**
- * reject:
- * @param{array}
- * @param{function}
- * @return{}
+ * reject: loops over an array and calls function for each element in the array and passes in three argument
+ * @param{array}: the input array to iterate over
+ * @param{function}: the function that is called to add arguments to the return array
+ * @return{array}: a new array of elements is returned when the function is returned false
  */
 
 function reject(array, func){
@@ -207,10 +207,10 @@ function reject(array, func){
   module.exports.reject = reject;
 
   /**
-   * partition:
-   * @param{array}
-   * @param{function}
-   * @return{}
+   * partition: function iterates over an array and calls the function and passes in three arguments for each element, returns an array with two subarrays, one with the elements that the function returned true and one with the elements that the function returned false 
+   * @param{array}: the input array to iterate over
+   * @param{function}: the function that is called to add arguments to the return array
+   * @return{array}: returns an array that consist of 2 subarrays, one containing the values for which the function returns true and one containing the values for which the function returns false
    */
    
   function partition(array, func){
@@ -229,10 +229,10 @@ function reject(array, func){
   module.exports.partition = partition;
 
   /**
-   * map
-   * @params{}
-   * @params{}
-   * @return{}
+   * map: function is called for each element in the collection and arguments are passed in, a new array is returned with the return value of the function
+   * @params{Array or object} collection: the input array or object to iterate over 
+   * @params{function}: the function that is called to add agruments to the return array
+   * @return{array}: a new array is returned that consists of the return value for each function call
    */
 
    function map(collection, func){
@@ -261,10 +261,10 @@ function reject(array, func){
   module.exports.map = map;
 
   /**
-   * pluck
-   * @params{array}
-   * @params{}
-   * @return{}
+   * pluck: function takes in an array of objects and a property value, returns a new array with the value of the property for each element in the input array 
+   * @params{array}: input array of objects to iterate over
+   * @params{property}: property argument to be returned in array
+   * @return{array}: a new array is returned containing the property values for each object in the input array
    * 
    */
 
@@ -277,10 +277,10 @@ function pluck(array, property){
 module.exports.pluck = pluck;
 
 /**
- * every:
- * @params{collection}:
- * @params{function}:
- * @returns{}:
+ * every: function takes in an array or object, function is called for every element in the array or object and a boolean value is returned
+ * @params{array or object} collection: input array or object to iterate over
+ * @params{function}: function is called for every element in the array or object
+ * @returns{boolean}: true is returned if every element in the collection is true when the function is called, false is returned if even one of the elements in the collection is false when the function is called
  */
 
 function every(collection, func){
@@ -324,10 +324,92 @@ function every(collection, func){
   module.exports.every = every;
 
 /**
- * some:
- * @param{}
- * @param{}
- * @return{}
+ * some: function takes in an array or object, function is called for every element in the array or object and a boolean value is returned
+ * @param{array or object}collection: input array or object to iterate over
+ * @param{function}: function is called for every element in the array or object
+ * @return{boolean}: true is returned if even one element in the collection is true when the function is called, false is returned if all of the elements in the collection is false when the function is called
  * 
  */
 
+ function some(collection, func){
+  //determine if func is undefined
+  if(func === undefined){
+    if(Array.isArray(collection)){
+      for (var i = 0; i < collection.length; i++){
+        if(collection[i]){
+          return true;
+        }
+      }
+    }else{
+      for(let key in collection){
+        if(collection[key]){
+          return true;
+        }
+      }
+    }
+  }else{
+    if(Array.isArray(collection)){
+      for(let i = 0; i < collection.length; i++){
+        if(func(collection[i], i, collection) == true){
+          return true;
+        }
+      }
+    }else{
+      for(let key in collection){
+        if(collection[key]){
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+module.exports.some = some
+
+/**
+ * reduce: function is called for every element in the input collection, and 3 arguments are passed in, returns the value of the final function call
+ * @param{array}: input array to iterate over
+ * @param{function}: function is called for every element in array
+ * @param{seed}: the value that the function should end at
+ * @return{value}: value of last function call is returned
+ * 
+ */
+
+ function reduce(array, func, seed){
+  //create accumulator variable
+  let accumulator;
+  //determine if seed was not passed in
+  if(seed === undefined){
+    accumulator = array[0];
+    //"continue to the next element" and iterate through the input array
+    for(let i = 1; i < array.length; i++){
+      accumulator = func(accumulator, array[i], i, array); //func(1, 2, 1, [1, 2, 3]) => 3
+    }
+  }else {
+      //else seed was passed in
+    accumulator = seed;
+    for (let i = 0; i < array.length; i++){
+      accumulator = func(accumulator, array[i], i, array);
+    }
+  }
+  return accumulator;
+}
+
+module.exports.reduce = reduce
+
+/**
+ * extend: function takes in objects as an argument and copies all the properties from the objects to the first object
+ * @param{object}: input object, first object
+ * @param{object}: other input objects  
+ * @return{object}:properties from the other input objects are copied to object 1 and returned
+ */
+
+function extend(object1, inputs){
+  //copy properties from object2 to object1
+    Object.assign(object1, inputs);
+  //copy properties from other objects to object1 in the order they are passed in
+  
+  //return updated object1
+  return object1;
+  }
